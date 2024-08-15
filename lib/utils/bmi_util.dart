@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -6,14 +5,14 @@ import 'package:flutter/material.dart';
 class BmiUtil {
   static int age = 20;
   static bool isCmUnit = false;
-  static int  height=170;
+  static int height = 170;
   static double weight = 50;
   static bool isKg = true;
   static int feet = 4;
   static int inch = 10;
+  static String gender = "Male";
 
   static double _bmi = 0;
-
 
   static int feetInchToCM(int feet, int inch) {
     int totalInch = ((feet * 12) + inch);

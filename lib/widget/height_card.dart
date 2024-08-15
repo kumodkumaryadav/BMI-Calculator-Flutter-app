@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../utils/bmi_util.dart';
@@ -6,9 +5,9 @@ import 'cutom_slider.dart';
 import 'feet_inch_card.dart';
 
 class CustomHeightWidget extends StatefulWidget {
-  const CustomHeightWidget({
-    Key? key,
-  }) : super(key: key);
+  final bool isWideScreen;
+  const CustomHeightWidget({Key? key, required this.isWideScreen})
+      : super(key: key);
 
   @override
   State<CustomHeightWidget> createState() => _CustomHeightWidgetState();
@@ -18,8 +17,12 @@ class _CustomHeightWidgetState extends State<CustomHeightWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
-      width: MediaQuery.of(context).size.width,
+      height: widget.isWideScreen
+          ? MediaQuery.of(context).size.height * 0.4
+          : MediaQuery.of(context).size.height * 0.3,
+      width: widget.isWideScreen
+          ? MediaQuery.of(context).size.width * 0.8
+          : MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: const Color.fromARGB(255, 90, 87, 87),

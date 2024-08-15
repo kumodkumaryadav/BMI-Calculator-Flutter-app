@@ -1,4 +1,4 @@
-
+import 'package:bmi_scrach/widget/gender_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/bmi_util.dart';
@@ -30,121 +30,109 @@ class Home extends StatelessWidget {
   }
 }
 
-
 class BodyContent extends StatelessWidget {
   const BodyContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //Age widget
-                Container(
-                  height: 170,
-                  width: 170,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 90, 87, 87),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CustomCardWidget(title: "Age(in years)"),
-                  ),
-                ),
+    return SingleChildScrollView(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Determine if the screen is wide (e.g., tablet or desktop)
+          bool isWideScreen = constraints.maxWidth > 600;
 
-                //Weight widget
-                Container(
-                  height: 170,
-                  width: 170,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 90, 87, 87),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CustomCardWidget(
-                      title: "Weight(KG)",
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CustomHeightWidget(),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 150,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 90, 87, 87),
-                borderRadius: BorderRadius.circular(15)),
+          return Padding(
+            padding: const EdgeInsets.only(top: 8),
             child: Column(
               children: [
-                const SizedBox(
-                  height: 30,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: isWideScreen
+                        ? MainAxisAlignment.spaceEvenly
+                        : MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Age widget
+                      _buildCard(
+                        context,
+                        title: "Age (in years)",
+                        width: isWideScreen ? constraints.maxWidth * 0.3 : 170,
+                      ),
+                      const SizedBox(width: 8),
+                      // Weight widget
+                      _buildCard(
+                        context,
+                        title: "Weight (KG)",
+                        width: isWideScreen ? constraints.maxWidth * 0.3 : 170,
+                      ),
+                    ],
+                  ),
                 ),
-                const Text(
-                  "Gender",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CustomHeightWidget(
+                    isWideScreen: isWideScreen,
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Text(
-                      "I'm ",
-                      style:
-                          TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+                const SizedBox(height: 10),
+                GenderWidget(isWideScreen: isWideScreen),
+                const SizedBox(height: 20),
+                Container(
+                  height: 60,
+                  width: isWideScreen ? 350 : 250,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 68, 88, 201),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      var bmi = BmiUtil.calculateBMI();
+
+                      showModalBottomSheet(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        backgroundColor: Colors.black,
+                        context: context,
+                        builder: (context) {
+                          return BottomSheetContent(bmi: bmi);
+                        },
+                      );
+                    },
+                    child: const Text(
+                      "CALCULATE",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    CustomGender(),
-                  ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
                 )
               ],
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-              height: 60,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 68, 88, 201),
-                  borderRadius: BorderRadius.circular(20)),
-              child: TextButton(
-                  onPressed: () {
-                    var bmi = BmiUtil.calculateBMI();
+          );
+        },
+      ),
+    );
+  }
 
-                    showModalBottomSheet(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      backgroundColor: Colors.black,
-                      context: context,
-                      builder: (context) {
-                        return BottomSheetContent(bmi: bmi);
-                      },
-                    );
-                  },
-                  child: const Text(
-                    "CALCULATE",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  )))
-        ],
+  Widget _buildCard(BuildContext context,
+      {required String title, required double width}) {
+    return Container(
+      height: 170,
+      width: width,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 90, 87, 87),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CustomCardWidget(title: title),
       ),
     );
   }
 }
-
